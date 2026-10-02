@@ -1,6 +1,6 @@
 # Tabla comparativa: modelos fuzzy en mamografía
 
-Comparativa de **65 trabajos** (2010–2026) que aplican lógica difusa / modelos neuro-fuzzy a mamografía, según su rol en el flujo de análisis, modelo, dataset, métricas y vinculación con BI-RADS.
+Mapa completo de los **65 trabajos** (2010–2026) que aplican lógica difusa o modelos neuro-fuzzy a mamografía, según su rol en el flujo de análisis, modelo, dataset, métricas y vinculación con BI-RADS.
 
 | Autor (año) | Rol | Modelo fuzzy | Dataset | Métrica principal | ¿Vincula BI-RADS? |
 |:--|:--|:--|:--|:--|:--|
