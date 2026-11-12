@@ -1,17 +1,17 @@
 """
-Búsqueda en Semantic Scholar (Graph API) para revisión PRISMA-ScR
-Fuzzy logic / ANFIS aplicado a mamografía y clasificación BI-RADS
+Search in Semantic Scholar (Graph API) for PRISMA-ScR review
+Fuzzy logic / ANFIS applied to mammography and BI-RADS classification
 
-Requiere: pip install requests pandas
+Requires: pip install requests pandas
 
-Notas sobre la sintaxis de búsqueda de Semantic Scholar:
-- Espacio entre términos = AND implícito
-- "|" = OR
-- "" (comillas) = frase exacta
-- () = agrupación
-- API pública sin key: límite ~100 requests / 5 min (compartido entre todos
-  los usuarios sin key). Si tienes muchos resultados, corre el script con
-  pausas o solicita una API key gratuita en:
+Notes on Semantic Scholar search syntax:
+- Space between terms = implicit AND
+- “|” = OR
+- “” (quotes) = exact phrase
+- () = grouping
+- Public API without a key: limit of ~100 requests / 5 min (shared among all
+  users without a key). If you get many results, run the script with
+  pauses or request a free API key at:
   https://www.semanticscholar.org/product/api#api-key-form
 """
 
@@ -22,13 +22,13 @@ import re
 import sys
 
 # =========================================================
-# CONFIGURACIÓN
+# CONFIG
 # =========================================================
 
-API_KEY = None  # Opcional: pega aquí tu key si la solicitaste
+API_KEY = None  # Optional: Paste here your key
 BASE_URL = "https://api.semanticscholar.org/graph/v1/paper/search"
 
-# Ecuación adaptada a la sintaxis de Semantic Scholar
+# Adapted equation to Semantic Scholar syntax
 QUERY = (
     '("fuzzy logic" | "fuzzy system" | "fuzzy inference system" | '
     '"fuzzy classifier" | ANFIS | "adaptive neuro-fuzzy inference system" | '
@@ -37,23 +37,23 @@ QUERY = (
     '"breast mass" | "breast imaging")'
 )
 
-# Rango de año, consistente con lo definido para las otras 3 bases
+# Year range
 YEAR_RANGE = "2010-2027"
 
-# Campos a recuperar (equivalentes a lo que usamos en el CSV de Rayyan)
+# Field to recover
 FIELDS = (
     "title,authors,year,venue,externalIds,abstract,url,"
     "publicationTypes,journal"
 )
 
-LIMIT_POR_PAGINA = 100  # máximo permitido por la API
-PAUSA_ENTRE_REQUESTS = 3.5  # segundos; sube esto si te da error 429
+LIMIT_POR_PAGINA = 100  # Maximum allow per API
+PAUSA_ENTRE_REQUESTS = 3.5  # Segunds; Up this if you get an error 429
 
 OUTPUT_CSV = r"semantic_scholar_resultados.csv"
 
 
 # =========================================================
-# FUNCIONES
+# Functions
 # =========================================================
 
 def buscar_semantic_scholar(query, year_range, fields, limit=100):
@@ -98,9 +98,9 @@ def buscar_semantic_scholar(query, year_range, fields, limit=100):
 
         print(f"  Recuperados {offset} / {total_esperado}")
 
-        # Semantic Scholar limita el offset máximo navegable (~1000-10000
-        # según endpoint); si total_esperado es muy grande, considera
-        # acotar la búsqueda (p. ej. por rango de año más pequeño).
+        # Semantic Scholar limits the maximum offset (~1000-10000
+        # According to endpoint); if total_esperado is too big, consider
+        # To limit search.
         if offset >= total_esperado or offset >= 9998:
             break
 
@@ -186,7 +186,7 @@ def deduplicar(df):
 
 
 # =========================================================
-# EJECUCIÓN
+# Execution
 # =========================================================
 
 if __name__ == "__main__":
@@ -208,8 +208,7 @@ if __name__ == "__main__":
     df = construir_dataframe(resultados)
     df_final = deduplicar(df)
 
-    # Generar key y limpiar columnas auxiliares, mismo esquema que el CSV
-    # ya usado para ScienceDirect + IEEE + PubMed en Rayyan
+    # To genered key an clean the auxiliary columns, same paradigm tha CSV
     df_final = df_final.reset_index(drop=True)
     df_final.insert(0, "key", df_final.index + 1)
     df_final = df_final.drop(columns=["doi_norm", "titulo_norm"])
